@@ -114,14 +114,14 @@ public class Simulator {
             System.out.println("Tempo em cada estado da fila:");
             for (int i = 0; i < queue.queueTimes.length; i++) {
                 if (queue.queueTimes[i] >0) {
-                    System.out.format("\tState %d: %.2f u.t\n", i, queue.queueTimes[i]);
+                    System.out.format("\tState %d: %.4f u.t\n", i, queue.queueTimes[i]);
                 }
             }
     
             System.out.println("Probabilidade de cada estado da fila");
             for (int i = 0; i < queue.queueTimes.length; i++) {
                 if (queue.queueTimes[i] >0) {
-                    System.out.format("\tProbabilidade do estado %d: %.3f%s \n", i, queue.queueTimes[i] / globalTime * 100, "%");
+                    System.out.format("\tProbabilidade do estado %d: %.2f%s \n", i, queue.queueTimes[i] / globalTime * 100, "%");
                 }
             }
     
@@ -131,7 +131,7 @@ public class Simulator {
             System.out.println("");
 
         }
-        System.out.printf("Tempo de simulação total: %.2f u.t\n\n", globalTime);
+        System.out.printf("Tempo de simulação total: %.4f u.t\n\n", globalTime);
     }
 
     
