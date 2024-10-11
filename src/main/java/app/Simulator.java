@@ -47,54 +47,87 @@ public class Simulator {
 
     public void chegada(Event event){
         Queue queue1 = getQueueById(event.to);
-        String target = queue1.getRoutingProbabilities().get(0).getTarget(); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
+        String target = null;
         acumulaTempo(event.tempo);
 
         if (queue1.status() < queue1.capacity()) {
             queue1.in();
 
             if (queue1.status() <= queue1.servers()) {
-                scheduler.add(
+
+                target=queue1.getNextTarget(randomGenerator);
+                
+                if (target == null) {
+                    scheduler.add(
+                        new Event(EventType.SAIDA,
+                                globalTime + randomTimeBetween(queue1.tempoServicoMin, queue1.tempoServicoMax),queue1.getId(),null));
+                }else{
+                    scheduler.add(
                         new Event(EventType.PASSAGEM,
                                 globalTime + randomTimeBetween(queue1.tempoServicoMin, queue1.tempoServicoMax),queue1.getId(),target));
+                }
+                
             }
         } else {
             queue1.loss();
         }
-
         scheduler.add(new Event(EventType.CHEGADA,
                 globalTime + randomTimeBetween(queue1.tempoChegadaMin, queue1.tempoChegadaMax),null,queue1.getId()));
     }
     
     public void saida(Event event){
         Queue source = getQueueById(event.from);
+        String target = null;
         acumulaTempo(event.tempo);
 
         source.out();
+
         if (source.status() >= source.servers()) {
-            scheduler.add(new Event(EventType.SAIDA,
+            target = source.getNextTarget(randomGenerator);
+            
+            if(target == null){
+                scheduler.add(new Event(EventType.SAIDA,
                     globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),null));
+            }else{
+                scheduler.add(new Event(EventType.PASSAGEM,
+                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),target));
+            }
         }
     }
 
     public void passagem(Event event) {
         Queue source = getQueueById(event.from);
         Queue target = getQueueById(event.to);
+        String nextTarget = null;
         acumulaTempo(event.tempo);
 
         source.out();
         if (source.status() >= source.servers()) {
-            scheduler.add(new Event(EventType.PASSAGEM,
-                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),target.getId()));
+            nextTarget = source.getNextTarget(randomGenerator);
+                
+            if(nextTarget == null){
+                scheduler.add(new Event(EventType.SAIDA,
+                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),null));
+            }else{
+                scheduler.add(new Event(EventType.PASSAGEM,
+                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),nextTarget));
+            }
         }
 
+        String nextTarget2 = null;
         if (target.status() < target.capacity()) {
             target.in();
 
             if (target.status() <= target.servers()) {
-                scheduler.add(
-                        new Event(EventType.SAIDA,
-                                globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),null));
+                nextTarget2= target.getNextTarget(randomGenerator);
+
+                if(nextTarget2 == null){
+                    scheduler.add(new Event(EventType.SAIDA,
+                        globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),null));
+                }else{
+                    scheduler.add(new Event(EventType.PASSAGEM,
+                        globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),nextTarget2));
+                }
             }
         } else {
             target.loss();

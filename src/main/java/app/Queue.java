@@ -80,7 +80,23 @@ public class Queue {
         return 0; // Retorna null se a fila com o ID não for encontrada
     }
 
-    
+    public String getNextTarget(RandomGeneratorForQueue randomGenerator){
+        String target=null;
+        if(this.getRoutingProbabilities().size()>1){
+            double sum =0.0;
+            double probability = randomGenerator.NextRandom();
+            for (RoutingProbability routingProbability : this.getRoutingProbabilities()) {
+                sum += routingProbability.getProbability();
+                if (sum > probability) {
+                    target= routingProbability.getTarget();
+                    break;
+                }
+            }
+        }else{
+            target = this.getRoutingProbabilities().get(0).getTarget();
+        }
+        return target;
+    }
 
     public ArrayList<RoutingProbability> getRoutingProbabilities() {
         return routingProbabilities;
