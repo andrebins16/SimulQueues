@@ -29,7 +29,6 @@ public class Simulator {
         return null; // Retorna null se a fila com o ID não for encontrada
     }
     
-
     public Event nextEvent(){
         return scheduler.poll();
     }
@@ -47,24 +46,24 @@ public class Simulator {
     }
 
     public void chegada(Event event){
-        Queue source = getQueueById(event.from);
-        String target = source.getRoutingProbabilities().get(0).getTarget();
+        Queue queue1 = getQueueById(event.to);
+        String target = queue1.getRoutingProbabilities().get(0).getTarget(); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
         acumulaTempo(event.tempo);
 
-        if (source.status() < source.capacity()) {
-            source.in();
+        if (queue1.status() < queue1.capacity()) {
+            queue1.in();
 
-            if (source.status() <= source.servers()) {
+            if (queue1.status() <= queue1.servers()) {
                 scheduler.add(
                         new Event(EventType.PASSAGEM,
-                                globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),target));
+                                globalTime + randomTimeBetween(queue1.tempoServicoMin, queue1.tempoServicoMax),queue1.getId(),target));
             }
         } else {
-            source.loss();
+            queue1.loss();
         }
 
         scheduler.add(new Event(EventType.CHEGADA,
-                globalTime + randomTimeBetween(source.tempoChegadaMin, source.tempoChegadaMax),source.getId(),null));
+                globalTime + randomTimeBetween(queue1.tempoChegadaMin, queue1.tempoChegadaMax),null,queue1.getId()));
     }
     
     public void saida(Event event){
@@ -102,7 +101,7 @@ public class Simulator {
         }
     }
 
-
+    
     public void displayResults() {
         
         System.out.println("===================================================================");

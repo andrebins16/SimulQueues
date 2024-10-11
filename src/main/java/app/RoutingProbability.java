@@ -1,4 +1,7 @@
 package app;
+
+//Classe que representa uma probabilidade de roteamento para target.
+//Se target = null, é para saida
 public class RoutingProbability{
     private String target;
     private double probability;

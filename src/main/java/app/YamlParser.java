@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+//Faz o parser do YAML, e guarda nas variaveis
 public class YamlParser {
     private String path;
 
@@ -17,11 +18,11 @@ public class YamlParser {
     private RandomGeneratorForQueue randomGenerator;
     private Queue[] queues;
     
-
     public YamlParser(String path) {
         this.path = path;
         this.scheduler = new PriorityQueue<>();
     }
+
     public  void run() {
         Yaml yaml = new Yaml();
         try (InputStream inputStream = new FileInputStream(this.path)) {
@@ -36,7 +37,7 @@ public class YamlParser {
             // cria o scheduler
             Map<String, Object> arrivals = (Map<String, Object>) data.get("arrivals");
             for (Map.Entry<String, Object> entry : arrivals.entrySet()) {
-                this.scheduler.add(new Event(EventType.CHEGADA, (double) entry.getValue(), entry.getKey(), null));
+                this.scheduler.add(new Event(EventType.CHEGADA, (double) entry.getValue(), null, entry.getKey()));
             }
             
 
@@ -78,9 +79,11 @@ public class YamlParser {
             for(Map.Entry<String, Object> entry : queuesYaml.entrySet()) {
                 Map<String, Object> queueMap = (Map<String, Object>) entry.getValue();
                 ArrayList<RoutingProbability> routingsQ = null;
-                
+
                 if(routings != null) {
                     double leftProb = 1.0;
+
+                    //Pega as routings da fila, e se existir, ainda calcula a probabilidade restante para ser a de saida
                     routingsQ = routings.get(entry.getKey());
                     if(routingsQ != null) {
                         for (RoutingProbability routing : routingsQ) {
@@ -102,6 +105,7 @@ public class YamlParser {
                     }
                     routingsQ.add(new RoutingProbability(null, 1.0));
                 }
+                //cria a queue com os dados do yaml e dos routings
                 int serverQ = (int)queueMap.get("servers");
                 int capacityQ = (int)queueMap.getOrDefault("capacity",1000);
                 double minArrivalQ = (double) queueMap.getOrDefault("minArrival", -1.0);

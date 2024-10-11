@@ -3,12 +3,18 @@ package app;
 import java.util.Arrays;
 
 public class RandomGeneratorForQueue {
+    //Max de numeros a serem gerados
+    private int maxNumbers;
+    //Contador de quantos numeros foram gerados
+    private int count=0;
+    
+    //Para gerar numeros pseudoaleatorios 
     private static final long a = 1664525;
     private static final long c = 1013904223;
     private static final long M = 4294967296L; // 2^32
     private long previous; // Semente inicial
-    private int count=0;
-    private int maxNumbers;
+
+    //Para usar um array de numeros pre estabelecidos
     private double[] arrMock;
     
 

@@ -2,8 +2,8 @@ package app;
 public class Event implements Comparable<Event> {
     double tempo;
     EventType tipo;
-    String from; // Para saida e entrada é a fila em que ocorre o evento. Para passagem, é a origem
-    String to;  //Fila destino. So para passagem
+    String from;  //Fila origem. Usado na saida e na passagem
+    String to;  //Fila destino. Usado na chegada e na passagem
 
     public Event(EventType tipo, double tempo,String from,String to) {
         this.tempo = tempo;
@@ -11,11 +11,6 @@ public class Event implements Comparable<Event> {
         this.from=from;
         this.to=to;
     }
-
-    // public Event(EventType tipo, double tempo) {
-    //     this.tempo = tempo;
-    //     this.tipo = tipo;
-    // }
 
     @Override
     public int compareTo(Event outroEvento) {
