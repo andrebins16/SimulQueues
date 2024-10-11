@@ -84,7 +84,7 @@ public class Queue {
         double prob = rnd.NextRandom();
         for(RoutingProbability rP : this.routingProbabilities){
             sum += rP.getProbability();
-            if(prob <= sum){
+            if(prob < sum){
                 return rP.getTarget();
             }
         }

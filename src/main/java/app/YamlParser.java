@@ -40,9 +40,10 @@ public class YamlParser {
             
 
             //cria o random generator
-            Object seedObj=data.get("seed");
+            Object seedObj=data.get("seeds");
             Object rndNumbersPerSeedObj=data.get("rndnumbersPerSeed");
-            int seed = seedObj == null ? -1 : (int)seedObj;
+            ArrayList<Integer> seeds = (ArrayList<Integer>)seedObj;
+            int seed = seedObj == null ? -1 : seeds.size(); 
             int rndNumbersPerSeed = rndNumbersPerSeedObj == null ? -1 : (int)rndNumbersPerSeedObj;
             
             if(seed > 0) {
@@ -50,16 +51,11 @@ public class YamlParser {
             } else {
                 //Acessa os random numbers e guarda em sua variavel
                 ArrayList<Double> rndNumbersAL = (ArrayList<Double>)data.get("rndnumbers");
-                if(rndNumbersAL != null){
-                    double[] rndNumbers = new double[rndNumbersAL.size()];
-                    for(int i = 0; i < rndNumbers.length; i++) {
-                        rndNumbers[i] = rndNumbersAL.get(i);
-                    }
-                    this.randomGenerator = new RandomGeneratorForQueue(rndNumbers);
+                double[] rndNumbers = new double[rndNumbersAL.size()];
+                for(int i = 0; i < rndNumbers.length; i++) {
+                    rndNumbers[i] = rndNumbersAL.get(i);
                 }
-                else{
-                    this.randomGenerator = new RandomGeneratorForQueue(100000);
-                }
+                this.randomGenerator = new RandomGeneratorForQueue(rndNumbers);
             }
             
             

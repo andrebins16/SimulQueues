@@ -31,20 +31,9 @@ public class RandomGeneratorForQueue {
         this.maxNumbers=maxNumbers;
     }
 
-    public RandomGeneratorForQueue(int maxNumbers){
-        this.previous = 0;
-        this.arrMock= null;
-        this.maxNumbers=maxNumbers;
-    }
-
     public double NextRandom() {
         if(arrMock!=null){
             return arrMock[count++];
-        }else if(previous == 0){
-            Random rand = new Random();
-            previous = rand.nextLong();
-            this.count++;
-            return (double) previous;
         }
         else{
             previous = (a * previous + c) % M;

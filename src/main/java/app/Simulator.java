@@ -79,32 +79,37 @@ public class Simulator {
     public void passagem(Event event) {
         Queue source = getQueueById(event.from);
         Queue target = getQueueById(event.to);
+        String newTarget = source.getNextQueue(randomGenerator);
         acumulaTempo(event.tempo);
-
+        
         source.out();
         if (source.status() >= source.servers()) {
-            scheduler.add(new Event(EventType.PASSAGEM,
-                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),target.getId()));
+            if(newTarget != null){
+                scheduler.add(new Event(EventType.PASSAGEM,
+                        globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(), newTarget));
+            }else{
+                scheduler.add(new Event(EventType.SAIDA,
+                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),null));
+            }
         }
 
-        if (target.status() < target.capacity()) {
+        if(target.status() < target.capacity()){
             target.in();
-
-            if (target.status() <= target.servers()) {
-                String targetOfTarget = target.getNextQueue(randomGenerator);
-                if(targetOfTarget == null){
+            if(target.status() <= target.servers()){
+                String targetOfTargetId = target.getNextQueue(randomGenerator);
+                if(targetOfTargetId == null){
                     scheduler.add(new Event(EventType.SAIDA,
                                     globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),null));
                 }
                 else{
                     scheduler.add(new Event(EventType.PASSAGEM,
-                                                globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax), target.getId(), targetOfTarget)
+                                                globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax), target.getId(), targetOfTargetId)
                     );
                 }
             }
         } else {
             target.loss();
-        }
+        }  
     }
 
     
