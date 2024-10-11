@@ -1,6 +1,7 @@
 package app;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class RandomGeneratorForQueue {
     //Max de numeros a serem gerados
@@ -24,16 +25,28 @@ public class RandomGeneratorForQueue {
         this.maxNumbers = arrMock.length;
     }
 
-    public RandomGeneratorForQueue(long seed,int maxNumbers){
+    public RandomGeneratorForQueue(long seed, int maxNumbers){
         this.previous =seed;
         this.arrMock=null;
+        this.maxNumbers=maxNumbers;
+    }
+
+    public RandomGeneratorForQueue(int maxNumbers){
+        this.previous = 0;
+        this.arrMock= null;
         this.maxNumbers=maxNumbers;
     }
 
     public double NextRandom() {
         if(arrMock!=null){
             return arrMock[count++];
-        }else{
+        }else if(previous == 0){
+            Random rand = new Random();
+            previous = rand.nextLong();
+            this.count++;
+            return (double) previous;
+        }
+        else{
             previous = (a * previous + c) % M;
             this.count++;
             return (double) previous / M;

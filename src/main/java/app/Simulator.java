@@ -1,6 +1,5 @@
 package app;
 import java.util.PriorityQueue;
-import java.util.HashMap;
 
 public class Simulator {
     //Queues
@@ -47,7 +46,7 @@ public class Simulator {
 
     public void chegada(Event event){
         Queue queue1 = getQueueById(event.to);
-        String target = queue1.getRoutingProbabilities().get(0).getTarget(); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
+        String target = queue1.getNextQueue(randomGenerator); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
         acumulaTempo(event.tempo);
 
         if (queue1.status() < queue1.capacity()) {

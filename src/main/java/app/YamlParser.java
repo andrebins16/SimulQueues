@@ -1,12 +1,10 @@
 package app;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -52,11 +50,16 @@ public class YamlParser {
             } else {
                 //Acessa os random numbers e guarda em sua variavel
                 ArrayList<Double> rndNumbersAL = (ArrayList<Double>)data.get("rndnumbers");
-                double[] rndNumbers = new double[rndNumbersAL.size()];
-                for(int i = 0; i < rndNumbers.length; i++) {
-                    rndNumbers[i] = rndNumbersAL.get(i);
+                if(rndNumbersAL != null){
+                    double[] rndNumbers = new double[rndNumbersAL.size()];
+                    for(int i = 0; i < rndNumbers.length; i++) {
+                        rndNumbers[i] = rndNumbersAL.get(i);
+                    }
+                    this.randomGenerator = new RandomGeneratorForQueue(rndNumbers);
                 }
-                this.randomGenerator = new RandomGeneratorForQueue(rndNumbers);
+                else{
+                    this.randomGenerator = new RandomGeneratorForQueue(100000);
+                }
             }
             
             
