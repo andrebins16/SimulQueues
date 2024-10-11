@@ -38,6 +38,9 @@ public class RandomGeneratorForQueue {
     }
 
     public double NextRandom() {
+        if(!hasNumbers()){
+            return -1;
+        }
         if(arrMock!=null){
             return arrMock[count++];
         }else if(previous == 0){
