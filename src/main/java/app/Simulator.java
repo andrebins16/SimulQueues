@@ -45,24 +45,24 @@ public class Simulator {
     }
 
     public void chegada(Event event){
-        Queue queue1 = getQueueById(event.to);
-        String target = queue1.getNextQueue(randomGenerator); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
+        Queue source = getQueueById(event.to);
+        String target = source.getNextQueue(randomGenerator); //pega o target da primeira probabilidade de roteamento, pois por enquanto é so uma!
         acumulaTempo(event.tempo);
 
-        if (queue1.status() < queue1.capacity()) {
-            queue1.in();
+        if (source.status() < source.capacity()) {
+            source.in();
 
-            if (queue1.status() <= queue1.servers()) {
+            if (source.status() <= source.servers()) {
                 scheduler.add(
                         new Event(EventType.PASSAGEM,
-                                globalTime + randomTimeBetween(queue1.tempoServicoMin, queue1.tempoServicoMax),queue1.getId(),target));
+                                globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),target));
             }
         } else {
-            queue1.loss();
+            source.loss();
         }
 
         scheduler.add(new Event(EventType.CHEGADA,
-                globalTime + randomTimeBetween(queue1.tempoChegadaMin, queue1.tempoChegadaMax),null,queue1.getId()));
+                globalTime + randomTimeBetween(source.tempoChegadaMin, source.tempoChegadaMax),null,source.getId()));
     }
     
     public void saida(Event event){
@@ -72,7 +72,7 @@ public class Simulator {
         source.out();
         if (source.status() >= source.servers()) {
             scheduler.add(new Event(EventType.SAIDA,
-                    globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),null));
+                globalTime + randomTimeBetween(source.tempoServicoMin, source.tempoServicoMax),source.getId(),null));
         }
     }
 
@@ -91,9 +91,16 @@ public class Simulator {
             target.in();
 
             if (target.status() <= target.servers()) {
-                scheduler.add(
-                        new Event(EventType.SAIDA,
-                                globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),null));
+                String targetOfTarget = target.getNextQueue(randomGenerator);
+                if(targetOfTarget == null){
+                    scheduler.add(new Event(EventType.SAIDA,
+                                    globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax),target.getId(),null));
+                }
+                else{
+                    scheduler.add(new Event(EventType.PASSAGEM,
+                                                globalTime + randomTimeBetween(target.tempoServicoMin, target.tempoServicoMax), target.getId(), targetOfTarget)
+                    );
+                }
             }
         } else {
             target.loss();

@@ -39,10 +39,8 @@ queues:
   Q3:
     servers: 2
     capacity: 10
-    minArrival: 2.0
-    maxArrival: 3.0
-    minService: 2.0
-    maxService: 4.0
+    minService: 5.0
+    maxService: 15.0
 
 network:
   - source: Q1
@@ -90,5 +88,6 @@ network:
 #   - 0.8324
 #   - 0.5011
 #   - 0.2931
-# rndnumbersPerSeed: 100000
-# seed: 1
+rndnumbersPerSeed: 100000
+seeds:
+  - 1
