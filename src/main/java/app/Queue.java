@@ -11,7 +11,7 @@ public class Queue {
     public double tempoChegadaMax;
     public double tempoServicoMin;
     public double tempoServicoMax;
-    public double[] queueTimes;
+    public ArrayList<Double> queueTimes;
 
     private ArrayList<RoutingProbability> routingProbabilities;
 
@@ -21,13 +21,20 @@ public class Queue {
     public Queue(String id,int serversQuantity, int capacity, double tempoChegadaMin, double tempoChegadaMax, double tempoServicoMin, double tempoServicoMax, ArrayList<RoutingProbability> routingProbabilities){
         this.id=id;
         this.serversQuantity=serversQuantity;
-        this.capacity=capacity;
+        
         this.tempoChegadaMin = tempoChegadaMin;
         this.tempoChegadaMax = tempoChegadaMax;
         this.tempoServicoMin = tempoServicoMin;
         this.tempoServicoMax = tempoServicoMax;
         this.routingProbabilities=routingProbabilities;
-        queueTimes = new double[capacity + 1];
+        if(capacity<0){
+            this.capacity=Integer.MAX_VALUE;
+        }else{
+            this.capacity=capacity;
+            
+        }
+        queueTimes = new ArrayList<>();
+        
     }
 
     public void in() {

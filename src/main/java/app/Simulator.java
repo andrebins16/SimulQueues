@@ -41,7 +41,14 @@ public class Simulator {
         double delta = eventTime - globalTime;
         globalTime = eventTime;
         for (Queue queueAux : this.queues) {
-            queueAux.queueTimes[queueAux.status()] += delta;
+            
+            if(queueAux.queueTimes.size() <= queueAux.status()){
+                queueAux.queueTimes.add(delta);
+            }else{
+                Double tempo = queueAux.queueTimes.get(queueAux.status());
+                queueAux.queueTimes.set(queueAux.status(), tempo + delta);
+            }
+            
         }
     }
 
@@ -145,16 +152,16 @@ public class Simulator {
             System.out.println("Fila: " + queue.getId());
 
             System.out.println("Tempo em cada estado da fila:");
-            for (int i = 0; i < queue.queueTimes.length; i++) {
-                if (queue.queueTimes[i] >0) {
-                    System.out.format("\tState %d: %.4f u.t\n", i, queue.queueTimes[i]);
+            for (int i = 0; i < queue.queueTimes.size(); i++) {
+                if (queue.queueTimes.get(i) >0) {
+                    System.out.format("\tState %d: %.4f u.t\n", i, queue.queueTimes.get(i));
                 }
             }
     
             System.out.println("Probabilidade de cada estado da fila");
-            for (int i = 0; i < queue.queueTimes.length; i++) {
-                if (queue.queueTimes[i] >0) {
-                    System.out.format("\tProbabilidade do estado %d: %.2f%s \n", i, queue.queueTimes[i] / globalTime * 100, "%");
+            for (int i = 0; i < queue.queueTimes.size(); i++) {
+                if (queue.queueTimes.get(i) >0) {
+                    System.out.format("\tProbabilidade do estado %d: %.2f%s \n", i, queue.queueTimes.get(i) / globalTime * 100, "%");
                 }
             }
     
