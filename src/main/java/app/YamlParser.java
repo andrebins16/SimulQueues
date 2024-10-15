@@ -107,7 +107,7 @@ public class YamlParser {
                 }
                 //cria a queue com os dados do yaml e dos routings
                 int serverQ = (int)queueMap.get("servers");
-                int capacityQ = (int)queueMap.getOrDefault("capacity",1000);
+                int capacityQ = (int)queueMap.getOrDefault("capacity",-1);
                 double minArrivalQ = (double) queueMap.getOrDefault("minArrival", -1.0);
                 double maxArrivalQ = (double) queueMap.getOrDefault("maxArrival", -1.0);
                 double minServiceQ = (double)queueMap.get("minService");
