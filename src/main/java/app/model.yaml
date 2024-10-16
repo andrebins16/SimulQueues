@@ -1,15 +1,8 @@
-#==============================================================================
-#  EXAMPLE
-#  Write '#' to input comments
-#==============================================================================
-#
 #  HOW TO EDIT THIS FILE
 #  
-#  To simulate with pseudo-random numbers automatically generated, use the options 'rndnumbersPerSeed' and 'seeds'
-#    rndnumbersPerSeed: <value> (it is only used if the option 'seeds' is declared)
-#    seeds: (list of seed values used to automatically generate the pseudo-random numbers) 
-#    - 1
-#    - 2
+#  To simulate with pseudo-random numbers automatically generated, use the options 'rndnumbersPerSeed' and 'seed'
+#    rndnumbersPerSeed: <value> (it is only used if the option 'seed' is declared)
+#    seed: <value>
 #  
 #  To simulate with a given list of pseudo-random numbers, use option 'rndnumbers'
 #    rndnumbers: (list of pseudo-random numbers to be used during the simulation)
@@ -18,12 +11,9 @@
 #    - 0.1109
 #  
 #  IMPORTANT:
-#    * If the option 'seeds' is used, 'rndnumbers' is ignored. In this case, delete 'rndnumbers'
-#      and its list of pseudo-random numbers
+#    * If the option 'seed' is used, 'rndnumbers' is ignored
 #  
 #  The remainder details in this file is self-explained. Good-luck! :-)
-#  
-#  DO NOT DELETE THE NEXT LINE STARTED BY '!'
 arrivals: 
    Q1: 2.0
 
