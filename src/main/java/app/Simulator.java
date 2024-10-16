@@ -1,6 +1,5 @@
 package app;
 import java.util.PriorityQueue;
-import java.util.HashMap;
 
 public class Simulator {
     //Queues
