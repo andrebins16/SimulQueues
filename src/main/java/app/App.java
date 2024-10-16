@@ -13,13 +13,6 @@ public class App {
         PriorityQueue<Event> scheduler = parser.getScheduler();
         RandomGeneratorForQueue randomGenerator =parser.getRandomGenerator(); ;
         Queue[] queues = parser.getQueues();
-        // System.out.println(scheduler);
-        // System.out.println(randomGenerator);
-        // for (Queue queue : queues) {
-        //     System.out.println(queue);
-        // }
-        // System.out.println(queues);
-
 
         Simulator sim = new Simulator(queues,randomGenerator,scheduler);
         while(randomGenerator.hasNumbers()) {
@@ -34,8 +27,5 @@ public class App {
             }
         }
         sim.displayResults();
-
-
-        
     }
 }

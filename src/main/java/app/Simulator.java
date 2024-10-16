@@ -141,37 +141,72 @@ public class Simulator {
         }
     }
 
+
+
     
     public void displayResults() {
         
-        System.out.println("===================================================================");
-        System.out.println("                              Resultados                           ");
-        System.out.println("===================================================================");
+        System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        System.out.println("                             Resultados                            ");
+        System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 
         for(Queue queue : this.queues){
-            System.out.println("Fila: " + queue.getId());
+            if(queue.capacity() == Integer.MAX_VALUE){
+                System.out.println("Fila: " + queue.getId() +" (G/G/"+queue.servers()+")");
+            }else{
+                System.out.println("Fila: " + queue.getId() +" (G/G/"+queue.servers()+"/"+queue.capacity()+")");
+            }
 
-            System.out.println("Tempo em cada estado da fila:");
-            for (int i = 0; i < queue.queueTimes.size(); i++) {
-                if (queue.queueTimes.get(i) >0) {
-                    System.out.format("\tState %d: %.4f u.t\n", i, queue.queueTimes.get(i));
+            if(queue.tempoChegadaMax != -1){
+                System.out.println("Chegada: " + queue.tempoChegadaMin + " ... " + queue.tempoChegadaMax );
+            }
+            System.out.println("Serviço: " + queue.tempoServicoMin + " ... " + queue.tempoServicoMax );
+            System.out.println("-------------------------------------------------------------------");
+            System.out.println(" State                     Time           Probability");
+
+
+            int K = queue.queueTimes.size();
+            int C = queue.servers();
+            double taxaAtt = 60/((queue.tempoServicoMax+queue.tempoServicoMin)/2.0);
+            double populacao=0.0;
+            double vazao=0.0;
+            double utilizacao=0.0;
+            double tempoResposta;
+
+            
+            
+            for (int i = 0; i < K; i++) {
+                double queueTime = queue.queueTimes.get(i);
+                double probabilityBetweenZeroAndOne = (queue.queueTimes.get(i) / globalTime);
+                if (queueTime > 0) {
+                    System.out.format("   %-7d %20.4f %20.2f%s \n", 
+                                    i, 
+                                    queueTime, 
+                                    probabilityBetweenZeroAndOne * 100, 
+                                    "%");
+                }
+                
+                if(i>0){
+                    double taxaAttI = taxaAtt * Math.min(i,C);
+                    populacao+= i * (probabilityBetweenZeroAndOne);
+                    vazao+= taxaAttI * (probabilityBetweenZeroAndOne);
+                    utilizacao+= probabilityBetweenZeroAndOne * ( (Math.min(i,C))/(double)C );
                 }
             }
-    
-            System.out.println("Probabilidade de cada estado da fila");
-            for (int i = 0; i < queue.queueTimes.size(); i++) {
-                if (queue.queueTimes.get(i) >0) {
-                    System.out.format("\tProbabilidade do estado %d: %.2f%s \n", i, queue.queueTimes.get(i) / globalTime * 100, "%");
-                }
-            }
-    
+            tempoResposta = populacao/vazao;
+
+            System.out.println("-------------------------------------------------------------------");
             System.out.println("Clientes perdidos: " + queue.getLossCounter());
+            System.out.printf("Populacao: %.4f\n", populacao);
+            System.out.printf("Vazao: %.4f\n", vazao);
+            System.out.printf("Utilizacao: %.2f%%\n", utilizacao*100);
+            System.out.printf("Tempo de resposta: %.4f\n", tempoResposta);
             System.out.println("");
-            System.out.println("===================================================================");
-            System.out.println("");
+            System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+            System.out.println("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 
         }
-        System.out.printf("Tempo de simulação total: %.4f u.t\n\n", globalTime);
+        System.out.printf("Tempo de simulação total: %.4f \n\n", globalTime);
     }
 
     
